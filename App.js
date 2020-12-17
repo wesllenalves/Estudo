@@ -1,12 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useEffect} from 'react';
+import Weather from './src/componentes/Weather';
+import Loading from './src/componentes/Loading';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
+import useWeather from "./src/utils/useWeather";
+import * as ScreenOrientation from 'expo-screen-orientation';
+
 
 export default function App() {
+const weather = useWeather();
+  useEffect(() => {
+    changeScreenOrientation();
+    async function changeScreenOrientation() {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.DEFAULT);
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      {!weather ? <Loading /> : <Weather forecast={weather} />}
     </View>
   );
 }
@@ -14,8 +25,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    width: '100%',
     alignItems: 'center',
+    backgroundColor: '#272343',
     justifyContent: 'center',
-  },
+  }, 
+  
 });
